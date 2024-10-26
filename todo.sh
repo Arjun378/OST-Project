@@ -2,7 +2,8 @@
 # This file can be sourced or executed.
 # More information below at the "Execution" section
 
-conf="${HOME}/.config/.todo" log_file="${HOME}/.config/todo_log" 
+conf="${HOME}/.config/.todo" 
+log_file="${HOME}/.config/todo_log" 
 [[ -f "${conf}" ]] || touch "${conf}"
 
 sed -i '/^\s*$/d' "${conf}"
@@ -38,8 +39,9 @@ List, add, or remove todo items.
 
 @OPTIONS:
     -h, --help      This help message.
-    -r, --remove    Remove an item by INDEX number. 
-    -a, --add       Add an item by ITEM with an optional DUE DATE (format: YYYY-MM-DD).
+    -r, --remove    Remove an item by INDEX number.
+    -a, --add       Add item by ITEM 
+    -t, --add       Add an item by ITEM with an optional DUE DATE (format: YYYY-MM-DD).
     -q, --quiet     No error messages.
 @INDEX:
     Integers        Index number of item.
@@ -48,7 +50,8 @@ List, add, or remove todo items.
 @EXAMPLES:
     todo            List all items in todo list.
     todo 1          List 1st ITEM in todo list. 
-    todo -a "Something to do" "2024-10-30"  Add a todo item with due date.
+    todo -a "Something to do" Add an todo item.
+    todo -t "Something to do" "2024-10-30"  Add a todo item with due date.
     todo -r 1       Remove item at index #1.
 
 EOF
@@ -83,10 +86,12 @@ EOF
                 if [[ ! -z "$3" ]]; then
                     due_date=" (Due: $3)"
                 fi
+                echo "$2" >>"${conf}" || {
                 echo "$2$due_date" >> "${conf}" || {
                     echo "Error: Failed to add item."
                     return 1
                 }
+                echo "Item added: $2"
                 echo "Item added: $2$due_date"
                 return 0
                 ;;
