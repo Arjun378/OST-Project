@@ -2,7 +2,16 @@
 # This file can be sourced or executed.
 # More information below at the "Execution" section
 
+conf="${HOME}/.config/.todo" log_file="${HOME}/.config/todo_log" 
+[[ -f "${conf}" ]] || touch "${conf}"
+
+sed -i '/^\s*$/d' "${conf}"
+
+function log_action(){
+echo "$(date "+%Y-%m-%d %H:%M:%S") - $1" >> "${log_file}"
+}
 # Todo Function
+local conf="${HOME}/.config/.todo"
 function todo() {
     local conf="${HOME}/.config/.todo"
     [[ -f "${conf}" ]] || touch "${conf}"  # Create config file if it doesn't exist
